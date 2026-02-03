@@ -1,0 +1,4 @@
+../Src/uart.c:12:6:uart_init	1
+../Src/uart.c:34:6:uart_send_byte	2
+../Src/uart.c:39:6:uart_send_string	2
+../Src/uart.c:45:9:uart_receive_byte	2
