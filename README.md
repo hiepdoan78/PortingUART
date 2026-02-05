@@ -1,4 +1,5 @@
 Pure register-level UART driver/library for STM32
+
 ❌ No HAL
 
 ❌ No LL
