@@ -133,6 +133,7 @@ No modification required in `uart.c`.
 ## 👨‍💻 Author
 
 Doan Minh Hiep
+
 Embedded Software Developer passionate about automotive, robotics, and low-level system programming.
 
 ---
