@@ -11,7 +11,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define RX_BUF_SIZE 64
+#define TX_BUF_SIZE 128
+#define RX_BUF_SIZE 256
 
 typedef enum {
 	UART_OK,
@@ -25,8 +26,8 @@ typedef struct {
 }ring_buffer_t;
 
 void uart_init(void);
-void uart_send_byte(uint8_t data);
+uart_status_t uart_send_byte(uint8_t data);
 void uart_send_string(const char *str);
-uart_status_t uart_read(uint8_t *data);
+uart_status_t uart_received(uint8_t *data);
 
 #endif /* UART_H_ */

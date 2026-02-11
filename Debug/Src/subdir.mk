@@ -9,21 +9,21 @@ C_SRCS += \
 ../Src/syscalls.c \
 ../Src/sysmem.c \
 ../Src/uart.c \
-../Src/uart_hw.c 
+../Src/uart_hw_stm32f1.c 
 
 OBJS += \
 ./Src/main.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o \
 ./Src/uart.o \
-./Src/uart_hw.o 
+./Src/uart_hw_stm32f1.o 
 
 C_DEPS += \
 ./Src/main.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d \
 ./Src/uart.d \
-./Src/uart_hw.d 
+./Src/uart_hw_stm32f1.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -33,7 +33,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/uart.cyclo ./Src/uart.d ./Src/uart.o ./Src/uart.su ./Src/uart_hw.cyclo ./Src/uart_hw.d ./Src/uart_hw.o ./Src/uart_hw.su
+	-$(RM) ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/uart.cyclo ./Src/uart.d ./Src/uart.o ./Src/uart.su ./Src/uart_hw_stm32f1.cyclo ./Src/uart_hw_stm32f1.d ./Src/uart_hw_stm32f1.o ./Src/uart_hw_stm32f1.su
 
 .PHONY: clean-Src
 

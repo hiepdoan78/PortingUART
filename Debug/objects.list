@@ -2,5 +2,5 @@
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Src/uart.o"
-"./Src/uart_hw.o"
+"./Src/uart_hw_stm32f1.o"
 "./Startup/startup_stm32f103c8tx.o"

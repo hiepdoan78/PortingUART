@@ -27,10 +27,11 @@ int main(void)
 {
 	uart_init();
 	uart_send_string("HELLO\r\n");
+
     /* Loop forever */
 	for(;;){
 		uint8_t data;
-		if(uart_read(&data) == UART_OK){
+		if(uart_received(&data) == UART_OK){
 			uart_send_byte(data);
 		}
 	}

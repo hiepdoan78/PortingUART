@@ -6,61 +6,66 @@
  */
 
 #include "uart.h"
-#include "uart_cfg.h"
-#include "stm32f103xb.h"
+#include "uart_hw.h"
 
 static volatile ring_buffer_t uart_rx;
+static volatile ring_buffer_t uart_tx;
 
 void uart_init(void){
-	// Enable CLOCK for GPIOA & USART1
-	RCC->APB2ENR |= (1 << 2); // GPIOA
-	RCC->APB2ENR |= (1 << 14); // USART1
-
-	// Config PA9 - TX: push-pull ouput
-	GPIOA->CRH &= ~(0xF << 4); // Clear 4 bits of PA9
-	GPIOA->CRH |=  (0xB << 4); // Set Alternate Function, Push-Pull mode
-
-	// Config PA10 - RX: Floating intput
-	GPIOA->CRH &= ~(0xF << 8); // Clear 4 bits of PA10
-	GPIOA->CRH |=  (0x4 << 8); // Set Floating input mode
-
-	//Baudrate
-//	USART1->BRR = UART_CLK_FREQ / UART_BAUDRATE;
-	USART1->BRR = 0x1D4C;
-
-	 //Enable TX, RX, USART, RXNEIE
-	USART1->CR1 |= (1 << 3);   // TE
-	USART1->CR1 |= (1 << 2);   // RE
-	USART1->CR1 |= (1 << 5);   // RXNEIE
-	USART1->CR1 |= (1 << 13);  // UE
-
-	NVIC_EnableIRQ(USART1_IRQn);
+	uart_hw_init();
 }
 
 void USART1_IRQHandler(void){
-	if((USART1->SR & (1 << 5))){
-		uint16_t next = (uart_rx.head + 1) % RX_BUF_SIZE;
-		uint8_t data = USART1->DR;
+	/* ERROR HANDLING */
+	if (uart_hw_get_error()) {
+		uart_hw_clear_error(); // clear error
+		return;
+	}
 
-		if (next != uart_rx.tail) {
-			uart_rx.buf[uart_rx.head] = data;
-			uart_rx.head = next;
+	if(uart_hw_rx_ready()){ // RXNE = 1
+		uint16_t rx_next = (uart_rx.head + 1) % RX_BUF_SIZE;
+		uint8_t rx_data = uart_hw_read();
+
+		if (rx_next != uart_rx.tail) {
+			uart_rx.buf[uart_rx.head] = rx_data;
+			uart_rx.head = rx_next;
 		}
 	}
-}
 
-void uart_send_byte(uint8_t data){
-	while (!(USART1->SR & (1 << 7)));  // Wait for TXE = 1
-	USART1->DR = data; // Write to Data Register
-}
+	if(uart_hw_tx_ready()){ // TXE = 1
+		if(uart_tx.head == uart_tx.tail){
+			uart_hw_disable_tx_irq();
+		}
+		else{
+			uint8_t tx_data = uart_tx.buf[uart_tx.tail];
+			uart_tx.tail = (uart_tx.tail + 1) % TX_BUF_SIZE;
+			uart_hw_send(tx_data);
+		}
 
-void uart_send_string(const char *str){
-	while(*str){
-		uart_send_byte(*str++);
 	}
 }
 
-uart_status_t uart_read(uint8_t *data)
+uart_status_t uart_send_byte(uint8_t data){
+	uint16_t tx_next = (uart_tx.head + 1) % TX_BUF_SIZE;
+	if (tx_next != uart_tx.tail) {
+		uart_tx.buf[uart_tx.head] = data;
+		uart_tx.head = tx_next;
+		uart_hw_enable_tx_irq(); // enable TX interrupt
+		return UART_OK;
+	}
+	return UART_BUSY;
+}
+
+void uart_send_string(const char *str)
+{
+    while(*str)
+    {
+        while(uart_send_byte(*str) == UART_BUSY);
+        str++;
+    }
+}
+
+uart_status_t uart_received(uint8_t *data)
 {
     if(uart_rx.head != uart_rx.tail){
     	*data = uart_rx.buf[uart_rx.tail];

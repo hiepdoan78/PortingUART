@@ -1,0 +1,10 @@
+../Drivers/CMSIS/Include/core_cm3.h:1511:22:__NVIC_EnableIRQ	2
+../Src/uart_hw_stm32f1.c:12:6:uart_hw_init	1
+../Src/uart_hw_stm32f1.c:38:6:uart_hw_send	1
+../Src/uart_hw_stm32f1.c:43:9:uart_hw_read	1
+../Src/uart_hw_stm32f1.c:48:9:uart_hw_tx_ready	1
+../Src/uart_hw_stm32f1.c:53:9:uart_hw_rx_ready	1
+../Src/uart_hw_stm32f1.c:58:6:uart_hw_enable_tx_irq	1
+../Src/uart_hw_stm32f1.c:63:6:uart_hw_disable_tx_irq	1
+../Src/uart_hw_stm32f1.c:68:10:uart_hw_get_error	1
+../Src/uart_hw_stm32f1.c:73:6:uart_hw_clear_error	1
